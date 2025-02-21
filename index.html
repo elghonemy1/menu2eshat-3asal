@@ -130,6 +130,19 @@
       border: none;
       background: transparent;
     }
+    @media (max-width: 768px) {
+      .main-logo { max-width: 70%; }
+      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
+      .loading-text { font-size: 1rem; }
+      /* تقليل حجم أزرار التواصل على الموبايل */
+      #contact-buttons a {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+      .contact-logo {
+        height: 18px;
+      }
+    }
     /* أزرار التواصل (على اليمين) */
     #contact-buttons {
       position: fixed;
@@ -169,7 +182,7 @@
       height: 24px;
       width: auto;
     }
-    /* زر المصمم (يستخدم نفس مكان اللوجو الثانوي) - يظهر بعد اختفاء شاشة الاستقبال */
+    /* زر المصمم (يستخدم نفس مكان اللوجو الثانوي) - يظهر بعد شاشة الاستقبال */
     #designer-button {
       position: fixed;
       bottom: 10px;
@@ -198,19 +211,6 @@
       100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(0,0,0,0);
-      }
-    }
-    /* تقليل حجم أزرار التواصل على الأجهزة المحمولة */
-    @media (max-width: 768px) {
-      .main-logo { max-width: 70%; }
-      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
-      .loading-text { font-size: 1rem; }
-      #contact-buttons a {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-      }
-      .contact-logo {
-        height: 18px;
       }
     }
   </style>
@@ -245,28 +245,21 @@
     </a>
   </div>
   
-  <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) - يظهر بعد اختفاء شاشة الاستقبال -->
+  <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) - يظهر بعد شاشة الاستقبال -->
   <div id="designer-button">
     <a href="https://yourdesignerpage.com" target="_blank">
       <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
     </a>
   </div>
   
-  <!-- سكربت شاشة الاستقبال وإظهار زر المصمم بعد اختفائها باستخدام localStorage -->
+  <!-- سكربت شاشة الاستقبال وإظهار زر المصمم بعد 5 ثوانٍ -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      if (localStorage.getItem("splashShown")) {
+      setTimeout(() => {
         document.getElementById('splash-screen').style.display = 'none';
         document.getElementById('menu-container').style.display = 'block';
         document.getElementById('designer-button').style.display = 'block';
-      } else {
-        setTimeout(() => {
-          document.getElementById('splash-screen').style.display = 'none';
-          document.getElementById('menu-container').style.display = 'block';
-          document.getElementById('designer-button').style.display = 'block';
-          localStorage.setItem("splashShown", "true");
-        }, 5000);
-      }
+      }, 5000);
     });
   </script>
   
