@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>منيو قشطة وعسل</title>
-  <!-- Preload لصورة الخلفية لتحسين سرعة التحميل -->
+  <!-- Preload لصورة الخلفية -->
   <link rel="preload" as="image" href="https://i.imgur.com/PDgHN0A.png">
   <!-- إضافة خط "Cairo" -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
@@ -37,15 +37,13 @@
     #splash-screen::before {
       content: "";
       position: absolute;
-      top: 0; 
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       background: url('https://i.imgur.com/PDgHN0A.png') center/cover no-repeat;
       animation: bgFadeOut 3s ease-out 2s forwards;
       z-index: -1;
     }
-    /* حاوية اللوجو */
     .logo-container {
       display: flex;
       flex-direction: column;
@@ -54,7 +52,7 @@
     .main-logo {
       max-width: 40%;
       height: auto;
-      /* ظهور، قفزة، وتلاشي بعد 4 ثوانٍ */
+      /* انيميشن: fadeIn, bounce, fadeOut */
       animation: fadeIn 2s ease-in, bounce 3s infinite ease-in-out, fadeOut 1s ease-out 4s forwards;
     }
     .second-logo {
@@ -75,50 +73,30 @@
       opacity: 0;
       animation: blink 1.5s infinite;
     }
-    .loading-text .dot:nth-child(2) {
-      animation-delay: 0.3s;
-    }
-    .loading-text .dot:nth-child(3) {
-      animation-delay: 0.6s;
-    }
+    .loading-text .dot:nth-child(2) { animation-delay: 0.3s; }
+    .loading-text .dot:nth-child(3) { animation-delay: 0.6s; }
     @keyframes blink {
       0%, 20% { opacity: 0; }
       50% { opacity: 1; }
       100% { opacity: 0; }
     }
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes fadeInMin {
-      0% { opacity: 0; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes bgFadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
+    @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes fadeInMin { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes bgFadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
     /* حاوية عرض المنيو */
     #menu-container {
       display: none;
       width: 100%;
       height: 100vh;
       overflow-y: auto;
+      /* استخدم الخلفية التي تريدها هنا */
       background: url('https://example.com/your-background-image.jpg') no-repeat center center fixed;
       background-size: cover;
     }
-    #pdf-container {
-      padding-bottom: 20px;
-    }
-    /* تنسيق صفحات PDF بدون هامش وظل */
+    #pdf-container { padding-bottom: 20px; }
+    /* عرض صفحات PDF تملأ الشاشة بالكامل */
     .pdf-page {
       display: block;
       margin: 0 auto;
@@ -138,7 +116,7 @@
       #contact-buttons a { padding: 4px; }
       .contact-logo { height: 18px; }
     }
-    /* أزرار التواصل: توضع في أقصى اليمين في الأسفل (بنفس مستوى زر المصمم) */
+    /* أزرار التواصل: تظهر في أقصى اليمين في الأسفل على نفس مستوى زر المصمم */
     #contact-buttons {
       position: fixed;
       bottom: 10px;
@@ -148,7 +126,7 @@
       gap: 10px;
       z-index: 20;
     }
-    /* تصميم أزرار التواصل كأيقونات فقط مع انيميشن جديد */
+    /* تصميم أزرار التواصل كأيقونات فقط مع انيميشن دوران بسيط */
     .contact-btn {
       display: flex;
       align-items: center;
@@ -158,14 +136,11 @@
       border-radius: 50%;
       transition: transform 0.2s ease-in-out;
     }
-    .contact-btn:hover {
-      transform: scale(1.1);
-    }
+    .contact-btn:hover { transform: scale(1.1); }
     .contact-logo {
-      height: 24px;
+      height: 32px;
       width: auto;
       display: block;
-      /* انيميشن جديد: دوران بسيط */
       animation: rotatePulse 2s infinite ease-in-out;
     }
     @keyframes rotatePulse {
@@ -173,13 +148,20 @@
       50% { transform: rotate(10deg); }
       100% { transform: rotate(0deg); }
     }
-    /* زر المصمم: يظهر في أسفل اليسار */
+    /* زر المصمم مع نص "designed by" فوقه */
     #designer-button {
       position: fixed;
       bottom: 10px;
       left: 10px;
       z-index: 30;
       display: none;
+      text-align: center;
+    }
+    #designer-button .designer-text {
+      font-size: 0.9rem;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      margin-bottom: 5px;
     }
     #designer-button a img {
       height: 40px;
@@ -187,13 +169,52 @@
       cursor: pointer;
       transition: transform 0.3s;
     }
-    #designer-button a img:hover {
-      transform: scale(1.1);
-    }
+    #designer-button a img:hover { transform: scale(1.1); }
     @keyframes buttonPulse {
       0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0.2); }
       50% { transform: scale(1.1); box-shadow: 0 0 15px 5px rgba(0,0,0,0); }
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+    }
+    /* نافذة Modal لعرض الصورة المكبرة مع اسم الصنف */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    #modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      text-align: center;
+      background: #fff;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      display: block;
+      margin: 0 auto;
+    }
+    #modal-caption {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #333;
+    }
+    #modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fff;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -214,24 +235,34 @@
     <div id="pdf-container"></div>
   </div>
   
-  <!-- أزرار التواصل (في أقصى اليمين في الأسفل) -->
+  <!-- أزرار التواصل (في أقصى اليمين بالأسفل) -->
   <div id="contact-buttons">
-    <a href="https://https://www.facebook.com/kshtaw3asl2" class="contact-btn facebook">
-      <img src="https://i.imgur.com/q4jRmvw.png" alt="Facebook Logo" class="contact-logo">
+    <a href="https://www.facebook.com/kshtaw3asl2" class="contact-btn facebook">
+      <img src="https://i.imgur.com/21Jbxz1.png" alt="Facebook Logo" class="contact-logo">
     </a>
     <a href="https://wa.me/+201019265003" class="contact-btn whatsapp">
-      <img src="https://i.imgur.com/0X381ZL.png" alt="WhatsApp Logo" class="contact-logo">
+      <img src="https://i.imgur.com/2ubOGzW.png" alt="WhatsApp Logo" class="contact-logo">
     </a>
     <a href="https://www.tiktok.com/@eshta.w.asal" class="contact-btn tiktok">
-      <img src="https://i.imgur.com/cqthyCT.png" alt="TikTok Logo" class="contact-logo">
+      <img src="https://i.imgur.com/64V1c8k.png" alt="TikTok Logo" class="contact-logo">
     </a>
   </div>
   
-  <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) -->
+  <!-- زر المصمم مع نص "designed by" فوقه (في أسفل اليسار) -->
   <div id="designer-button">
+    <div class="designer-text">designed by</div>
     <a href="https://www.facebook.com/profile.php?id=100054792170666">
       <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
     </a>
+  </div>
+  
+  <!-- نافذة Modal لعرض الصورة المكبرة مع اسم الصنف -->
+  <div id="modal-overlay">
+    <div id="modal-content">
+      <button id="modal-close">X</button>
+      <img id="modal-image" src="" alt="Enlarged Image">
+      <div id="modal-caption"></div>
+    </div>
   </div>
   
   <!-- سكربت شاشة الاستقبال وإظهار زر المصمم بعد 5 ثوانٍ -->
@@ -254,8 +285,25 @@
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
     }
     
+    // تعريف مصفوفة أسماء الأصناف (13 صنف)
+    const productNames = [
+      "كيكة دبى",
+      "الفنكوش والشقلوبة",
+      "عالم الرز بلبن",
+      "عالم أم على وميكسات الدفا",
+      "عالم البطاطا والسالانكتيه",
+      "القشطوطة",
+      "دزير كشرى حلو",
+      "طواجن السعادة والآيس كوفي",
+      "عصائر فريش",
+      "ميلك شيك",
+      "ميكس جوس وسموزي",
+      "يوغرت جوس & آيس كريم & موهيتو",
+      "شوكليت جوس"
+    ];
+    
     // رابط ملف PDF
-    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/last1/2eshta%20w%203asal%20menu.pdf';
+    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/2eshta-asal-menu/2eshta%26asal%20menu.pdf';
     const container = document.getElementById('pdf-container');
     
     pdfjsLib.getDocument(url).promise.then(function(pdfDoc) {
@@ -280,10 +328,23 @@
           page.render(renderContext).promise.then(function() {
             console.log('تم عرض الصفحة رقم:', pageNum);
           });
+          
+          // عند النقر على الصفحة، عرض المودال مع الصورة المكبرة واسم الصنف
+          canvas.addEventListener('click', function() {
+            const dataURL = canvas.toDataURL();
+            document.getElementById('modal-image').src = dataURL;
+            document.getElementById('modal-caption').innerText = productNames[pageNum - 1];
+            document.getElementById('modal-overlay').style.display = 'flex';
+          });
         });
       }
     }).catch(function(error) {
       console.error('خطأ في تحميل الـ PDF:', error);
+    });
+    
+    // إغلاق المودال
+    document.getElementById('modal-close').addEventListener('click', function() {
+      document.getElementById('modal-overlay').style.display = 'none';
     });
   </script>
 </body>
