@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
         integrity="sha512-pXYH5X5ED+PtE5wZymz/Uu4Wh9Jg+gZ0+1Z9xdM2Y6p+CnHq7s3X59+VxF2FE3UlPKzE0czNwA83jE5bM4Q3Uw==" 
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- إضافة مكتبة EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     /* إعدادات عامة */
     body {
@@ -48,11 +50,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
     .main-logo {
       max-width: 40%;
       height: auto;
-      animation: fadeIn 2s ease-in, bounce 3s infinite ease-in-out, fadeOut 1s ease-out 4s forwards;
+      animation: fadeIn 2s ease-in, bounce 2s infinite ease-in-out, fadeOut 1s ease-out 4s forwards;
     }
     .second-logo {
       position: absolute;
@@ -89,7 +92,7 @@
     }
     @keyframes bounce { 
       0%, 100% { transform: translateY(0); } 
-      50% { transform: translateY(-10px); } 
+      50% { transform: translateY(-5px); } 
     }
     @keyframes bgFadeOut { 
       0% { opacity: 1; } 
@@ -162,7 +165,7 @@
       50% { transform: rotate(10deg); }
       100% { transform: rotate(0deg); }
     }
-    /* زر المصمم مع نص "designed by" تحت اللوجو */
+    /* زر المصمم مع نص "designed by" فوق اللوجو */
     #designer-button {
       position: fixed;
       bottom: 10px;
@@ -171,7 +174,6 @@
       display: none;
       text-align: center;
     }
-    /* نقل النص تحت اللوجو عن طريق تبديل ترتيبه */
     #designer-button a img {
       height: 40px;
       width: auto;
@@ -181,12 +183,73 @@
     }
     #designer-button a img:hover { transform: scale(1.1); }
     #designer-button .designer-text {
-      font-size: 0.5rem;
+      font-size: 0.5rem; /* حجم النص أصغر */
       color: #333;
-      margin-top: 2px;
+      margin-bottom: 2px; /* النص قريب من اللوجو */
+      text-align: center;
     }
-    /* نافذة Modal */
-    #modal-overlay {
+    /* زر البحث */
+    #search-bar {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      display: none;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    #search-bar:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    #search-input {
+      width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    #search-input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+    }
+    /* زر الشكاوى والاقتراحات */
+    #suggestions-button {
+      position: fixed;
+      bottom: 60px;
+      right: 20px;
+      z-index: 40;
+      display: none;
+      background: #3498db;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    /* زر عناوين الفروع */
+    #branches-button {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      z-index: 40;
+      display: none;
+      background: #3498db;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    /* نافذة الاقتراحات */
+    #suggestions-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0;
@@ -197,27 +260,77 @@
       justify-content: center;
       align-items: center;
     }
-    #modal-content {
+    #suggestions-content {
       position: relative;
       max-width: 90%;
       max-height: 90%;
-      text-align: center;
       background: #fff;
-      padding: 10px;
+      padding: 20px;
       border-radius: 5px;
+      text-align: center;
     }
-    #modal-image {
-      max-width: 100%;
-      max-height: 80vh;
-      display: block;
-      margin: 0 auto;
+    #suggestions-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    #modal-caption {
-      margin-top: 10px;
-      font-size: 1.2rem;
+    #suggestions-form textarea {
+      width: 300px;
+      height: 100px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: none;
+    }
+    #suggestions-form button {
+      background: #3498db;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #suggestions-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fff;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    /* نافذة عناوين الفروع */
+    #branches-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    #branches-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    #branches-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #branches-list li {
+      margin-bottom: 10px;
+      font-size: 1rem;
       color: #333;
     }
-    #modal-close {
+    #branches-close {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -245,6 +358,11 @@
     <div id="pdf-container"></div>
   </div>
   
+  <!-- شريط البحث -->
+  <div id="search-bar">
+    <input type="text" id="search-input" placeholder="ابحث عن صنف...">
+  </div>
+  
   <!-- أزرار التواصل (في أقصى اليمين بالأسفل) -->
   <div id="contact-buttons">
     <a href="https://www.facebook.com/kshtaw3asl2" class="contact-btn facebook">
@@ -258,12 +376,52 @@
     </a>
   </div>
   
-  <!-- زر المصمم مع نص "designed by" تحت اللوجو (في أسفل اليسار) -->
+  <!-- زر المصمم مع نص "designed by" فوق اللوجو (في أسفل اليسار) -->
   <div id="designer-button">
+    <div class="designer-text">Designed by</div> <!-- النص فوق اللوجو -->
     <a href="https://www.facebook.com/profile.php?id=100054792170666">
       <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
     </a>
-    <div class="designer-text">designed by</div>
+  </div>
+  
+  <!-- زر الشكاوى والاقتراحات -->
+  <div id="suggestions-button">
+    للشكاوى والاقتراحات
+  </div>
+  
+  <!-- زر عناوين الفروع -->
+  <div id="branches-button">
+    عناوين الفروع
+  </div>
+  
+  <!-- نافذة الاقتراحات -->
+  <div id="suggestions-overlay">
+    <div id="suggestions-content">
+      <button id="suggestions-close">X</button>
+      <h3>الشكاوى والاقتراحات</h3>
+      <form id="suggestions-form" onsubmit="sendSuggestion(event)">
+        <textarea id="suggestion-text" placeholder="اكتب اقتراحك أو شكواك هنا..." required></textarea>
+        <button type="submit">إرسال</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- نافذة عناوين الفروع -->
+  <div id="branches-overlay">
+    <div id="branches-content">
+      <button id="branches-close">X</button>
+      <h3>عناوين الفروع</h3>
+      <ul id="branches-list">
+        <li>الفرع الأول: الإسكندرية - العصافرة على البحر - تراس أليكس (مكان فندق وردة العصافرة للقوات المسلحة)</li>
+        <li>رقم التليفون: <a href="tel:035512806">035512806</a></li>
+        <br>
+        <li>الفرع الثاني: كوم حمادة - ش المزلقان البحرى - بجوار مطعم كاتشب</li>
+        <li>رقم التليفون: <a href="tel:01019265003">01019265003</a></li>
+        <br>
+        <li>الفرع الثالث: إيتاي البارود - ميدان الجامعة - بجوار مطعم راية الشام</li>
+        <li>رقم التليفون: <a href="tel:0453434027">0453434027</a> - <a href="tel:01555656403">01555656403</a></li>
+      </ul>
+    </div>
   </div>
   
   <!-- نافذة Modal لعرض الصورة المكبرة مع اسم الصنف -->
@@ -282,6 +440,9 @@
         document.getElementById('splash-screen').style.display = 'none';
         document.getElementById('menu-container').style.display = 'block';
         document.getElementById('designer-button').style.display = 'block';
+        document.getElementById('search-bar').style.display = 'block';
+        document.getElementById('suggestions-button').style.display = 'block';
+        document.getElementById('branches-button').style.display = 'block';
       }, 5000);
     });
   </script>
@@ -289,27 +450,201 @@
   <!-- تحميل مكتبة PDF.js من CDNJS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
   <script>
-    if (typeof pdfjsLib === 'undefined') {
-      console.error('فشل تحميل مكتبة PDF.js');
-    } else {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
-    }
-    
-    // تعريف مصفوفة أسماء الأصناف (13 صنف)
+    // تهيئة EmailJS
+    (function() {
+      emailjs.init("2eshta $ 3asal"); // استبدل YOUR_USER_ID بمعرف المستخدم الخاص بك
+    })();
+
+    // تعريف مصفوفة أسماء الأصناف لكل صفحة
     const productNames = [
-      "كيكة دبى",
-      "الفنكوش والشقلوبة",
-      "عالم الرز بلبن",
-      "عالم أم على وميكسات الدفا",
-      "عالم البطاطا والسالانكتيه",
-      "القشطوطة",
-      "دزير كشرى حلو",
-      "طواجن السعادة والآيس كوفي",
-      "عصائر فريش",
-      "ميلك شيك",
-      "ميكس جوس وسموزي",
-      "يوغرت جوس & آيس كريم & موهيتو",
-      "شوكليت جوس"
+      // الصفحة الأولى
+      ["كيكة دبى"],
+      // الصفحة الثانية
+      ["الفنكوش", "الشقلوبة"],
+      // الصفحة الثالثة
+      [
+        "رز بلبن كلاسيك",
+        "رز بلبن بالمكسرات",
+        "رز بلبن بالفستق الحلبى",
+        "رز بلبن أوريو ونوتيلا",
+        "رز بلبن كيت كات وأوريو ونوتيلا",
+        "رز بلبن سكلانس",
+        "رز بلبن لوتس وكراميل",
+        "رز بلبن بقطع المانجو",
+        "رز بلبن بالآيس كريم",
+        "رز بلبن بالقشطة والعسل",
+        "رز بلبن بالفواكه",
+        "رز بلبن مودو",
+        "رز بلبن عمورى",
+        "رز بلبن شهر العسل",
+        "جريمة رز بلبن",
+        "رعشة قشطة وعسل",
+        "القنبلة"
+      ],
+      // الصفحة الرابعة
+      [
+        "طاجن أم على كلاسيك",
+        "طاجن أم على الغندورة",
+        "طاجن أم على السنيورة",
+        "طاجن أم على الرايقة",
+        "طاجن أم على الدلوعه",
+        "طاجن أم على أيس كريم",
+        "طاجن أم على لوتس",
+        "طاجن أم على البركة",
+        "كسكسى باللبن والقشطة",
+        "كسكسى باللبن والمكسرات والقشطة والبسبوسة",
+        "بليلة باللبن والقشطة",
+        "بليلة باللبن والمكسرات والقشطة والبسبوسة"
+      ],
+      // الصفحة الخامسة
+      [
+        "طاجن أم على كلاسيك",
+        "طاجن أم على الغندورة",
+        "طاجن أم على السنيورة",
+        "طاجن أم على الرايقة",
+        "طاجن أم على الدلوعه",
+        "طاجن أم على أيس كريم",
+        "طاجن أم على لوتس",
+        "طاجن أم على البركة",
+        "كسكسى باللبن والقشطة",
+        "كسكسى باللبن والمكسرات والقشطة والبسبوسة",
+        "بليلة باللبن والقشطة",
+        "بليلة باللبن والمكسرات والقشطة والبسبوسة"
+      ],
+      // الصفحة السادسة
+      [
+        "النعنوشة",
+        "قشطوطة مكسرات",
+        "قشطوطة فواكه",
+        "قشطوطة لوتس",
+        "قشطوطة كراميل",
+        "قشطوطة أوريو نوتيلا",
+        "قشطوطة مانجا",
+        "قشطوطة ميكس",
+        "قشطوطة روشيه",
+        "قشطوطة رفاييلو"
+      ],
+      // الصفحة السابعة
+      [
+        "جيلى",
+        "جيلى كاستر",
+        "كاستر",
+        "كريم كراميل",
+        "كبسولة أربجيه",
+        "المتسهوكه",
+        "مولتن كيك",
+        "فادج",
+        "كاب أوريو",
+        "مسخسخة فادج",
+        "كشرى فواكه",
+        "كشرى لوتس",
+        "كشرى أوريو نوتيلا",
+        "كشرى مانجا"
+      ],
+      // الصفحة الثامنة
+      [
+        "طاجن الحنين",
+        "طاجن بوريو نوتيلا",
+        "طاجن أوريو نوتيلا",
+        "طاجن توينكز نوتيلا",
+        "طاجن هوهوز نوتيلا",
+        "طاجن براونيز نوتيلا",
+        "طاجن ميكس نوتيلا",
+        "طاجن لوتس نوتيلا",
+        "آيس كوفى أوريو",
+        "آيس كوفى كيت كات",
+        "آيس كوفى مالتيزر",
+        "آيس كوفى لوتس"
+      ],
+      // الصفحة التاسعة
+      [
+        "عصاير فريش",
+        "مانجو",
+        "شجرة مانجو",
+        "فراولة",
+        "جوافة",
+        "موز",
+        "بطيخ",
+        "برتقال",
+        "بلح باللبن",
+        "بلح شيكولاته",
+        "رمان",
+        "رمان حب",
+        "كنتالوب",
+        "كيوى",
+        "افوكادو",
+        "ليمون",
+        "ليمون نعناع",
+        "فروت سلاط"
+      ],
+      // الصفحة العاشرة
+      [
+        "ميلك شيك فانيليا",
+        "ميلك شيك شيكولاته",
+        "ميلك شيك فراولة",
+        "ميلك شيك بطيخ",
+        "ميلك شيك مانجو",
+        "ميلك شيك بلوبيرى",
+        "ميلك شيك كولا",
+        "ميلك شيك أوريو",
+        "ميلك شيك كنافة",
+        "ميلك شيك ليمون نعناع",
+        "ميلك شيك توت",
+        "ميلك شيك كراميل",
+        "ميلك شيك لوتس"
+      ],
+      // الصفحة الحادية عشر
+      [
+        "سموزى بطيخ",
+        "سموزى أناناس",
+        "سموزى توت",
+        "سموزى رمان",
+        "سموزى برتقال",
+        "سموزى تفاح",
+        "سموزى مانجو",
+        "سموزى ليمون نعناع",
+        "كيوى مانجو",
+        "بلح موز",
+        "موز فراولة",
+        "ميكس الروقان",
+        "فراولة مانجو",
+        "موز كراميل",
+        "ميكس فواكه"
+      ],
+      // الصفحة الثانية عشر
+      [
+        "زبادى توت",
+        "زبادى عسل",
+        "زبادى كراميل",
+        "زبادى مانجو",
+        "زبادى فراولة",
+        "زبادى أوريو",
+        "زبادى شيكولاته",
+        "زبادى فواكه قطع",
+        "موهيتو",
+        "بلو بيرى",
+        "ميكس بيرى",
+        "سان شاين",
+        "آيس كريم شرقى",
+        "آيس كريم سبيشال",
+        "آيس كريم فستق"
+      ],
+      // الصفحة الثالثة عشر
+      [
+        "عصاير شوكلاته",
+        "أوريو",
+        "أوريو مانجو",
+        "أوريو ميكس",
+        "كيت كات",
+        "مالتيزر",
+        "تويكس وايت",
+        "نسكافيه",
+        "كيندر",
+        "بوريو",
+        "بوريو موز",
+        "توينكيز مانجو",
+        "لوتس"
+      ]
     ];
     
     // رابط ملف PDF
@@ -327,6 +662,7 @@
           
           let canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
+          canvas.id = `page-${pageNum}`; // إضافة ID لكل صفحة
           // إزالة devicePixelRatio لجعل الصورة كما في الأصل
           canvas.width = viewport.width;
           canvas.height = viewport.height;
@@ -347,7 +683,7 @@
           canvas.addEventListener('click', function() {
             const dataURL = canvas.toDataURL();
             document.getElementById('modal-image').src = dataURL;
-            document.getElementById('modal-caption').innerText = productNames[pageNum - 1];
+            document.getElementById('modal-caption').innerText = productNames[pageNum - 1].join(', ');
             document.getElementById('modal-overlay').style.display = 'flex';
           });
         });
@@ -359,6 +695,62 @@
     // إغلاق المودال
     document.getElementById('modal-close').addEventListener('click', function() {
       document.getElementById('modal-overlay').style.display = 'none';
+    });
+    
+    // وظيفة البحث
+    document.getElementById('search-input').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const pages = document.querySelectorAll('.pdf-page');
+      pages.forEach((page, index) => {
+        const pageProducts = productNames[index];
+        if (pageProducts.some(product => product.toLowerCase().includes(searchTerm))) {
+          page.style.display = 'block';
+          if (searchTerm !== "") {
+            page.scrollIntoView({ behavior: 'smooth' }); // التمرير إلى الصفحة
+          }
+        } else {
+          page.style.display = 'none';
+        }
+      });
+    });
+    
+    // فتح نافذة الاقتراحات
+    document.getElementById('suggestions-button').addEventListener('click', function() {
+      document.getElementById('suggestions-overlay').style.display = 'flex';
+    });
+    
+    // إغلاق نافذة الاقتراحات
+    document.getElementById('suggestions-close').addEventListener('click', function() {
+      document.getElementById('suggestions-overlay').style.display = 'none';
+    });
+    
+    // إرسال الاقتراحات باستخدام EmailJS
+    function sendSuggestion(event) {
+      event.preventDefault(); // منع إعادة تحميل الصفحة
+      const suggestionText = document.getElementById('suggestion-text').value;
+      if (suggestionText.trim() !== "") {
+        emailjs.send("service_oy9eizp", "template_coobd3z", {
+          message: suggestionText
+        }).then(function(response) {
+          alert('تم إرسال اقتراحك بنجاح! شكرًا لك.');
+          document.getElementById('suggestion-text').value = ""; // مسح الحقل
+          document.getElementById('suggestions-overlay').style.display = 'none'; // إغلاق النافذة
+        }, function(error) {
+          alert('حدث خطأ أثناء إرسال الاقتراح. يرجى المحاولة مرة أخرى.');
+        });
+      } else {
+        alert("يرجى كتابة اقتراحك أو شكواك قبل الإرسال.");
+      }
+    }
+    
+    // فتح نافذة عناوين الفروع
+    document.getElementById('branches-button').addEventListener('click', function() {
+      document.getElementById('branches-overlay').style.display = 'flex';
+    });
+    
+    // إغلاق نافذة عناوين الفروع
+    document.getElementById('branches-close').addEventListener('click', function() {
+      document.getElementById('branches-overlay').style.display = 'none';
     });
   </script>
 </body>
