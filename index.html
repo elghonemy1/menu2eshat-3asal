@@ -646,6 +646,23 @@
         "لوتس"
       ]
     ];
+
+    // عناوين الصفحات الرئيسية
+    const pageTitles = [
+      "كيكة دبى",
+      "الفنكوش والشقلوبة",
+      "عالم الرز بلبن",
+      "عالم أم على وميكسات الدفا",
+      "عالم البطاطا والسالانكتيه",
+      "القشطوطة",
+      "دزير كشرى حلو",
+      "طواجن السعادة والآيس كوفي",
+      "عصائر فريش",
+      "ميلك شيك",
+      "ميكس جوس وسموزي",
+      "يوغرت جوس & آيس كريم & موهيتو",
+      "شوكليت جوس"
+    ];
     
     // رابط ملف PDF
     const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/2eshta-asal-menu/2eshta%26asal%20menu.pdf';
@@ -656,18 +673,17 @@
       for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
         pdfDoc.getPage(pageNum).then(function(page) {
           let unscaledViewport = page.getViewport({ scale: 1 });
-          // استخدام عرض الشاشة بالكامل
-          let desiredScale = (window.innerWidth) / unscaledViewport.width;
+          // استخدام عرض الشاشة بالكامل مع تحسين الجودة
+          let desiredScale = (window.innerWidth * window.devicePixelRatio) / unscaledViewport.width;
           let viewport = page.getViewport({ scale: desiredScale });
           
           let canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
           canvas.id = `page-${pageNum}`; // إضافة ID لكل صفحة
-          // إزالة devicePixelRatio لجعل الصورة كما في الأصل
           canvas.width = viewport.width;
           canvas.height = viewport.height;
-          canvas.style.width = viewport.width + "px";
-          canvas.style.height = viewport.height + "px";
+          canvas.style.width = viewport.width / window.devicePixelRatio + "px";
+          canvas.style.height = viewport.height / window.devicePixelRatio + "px";
           let ctx = canvas.getContext('2d');
           container.appendChild(canvas);
           
@@ -679,11 +695,11 @@
             console.log('تم عرض الصفحة رقم:', pageNum);
           });
           
-          // عند النقر على الصفحة، عرض المودال مع الصورة المكبرة واسم الصنف
+          // عند النقر على الصفحة، عرض المودال مع الصورة المكبرة واسم الصنف الرئيسي
           canvas.addEventListener('click', function() {
             const dataURL = canvas.toDataURL();
             document.getElementById('modal-image').src = dataURL;
-            document.getElementById('modal-caption').innerText = productNames[pageNum - 1].join(', ');
+            document.getElementById('modal-caption').innerText = pageTitles[pageNum - 1];
             document.getElementById('modal-overlay').style.display = 'flex';
           });
         });
@@ -729,7 +745,7 @@
       event.preventDefault(); // منع إعادة تحميل الصفحة
       const suggestionText = document.getElementById('suggestion-text').value;
       if (suggestionText.trim() !== "") {
-        emailjs.send("service_oy9eizp", "template_coobd3z", {
+        emailjs.send("service_oy9eizp", "template_4r0a8h2", {
           message: suggestionText
         }).then(function(response) {
           alert('تم إرسال اقتراحك بنجاح! شكرًا لك.');
