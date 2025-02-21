@@ -79,11 +79,26 @@
       50% { opacity: 1; }
       100% { opacity: 0; }
     }
-    @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-    @keyframes fadeInMin { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    @keyframes bgFadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
-    @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes fadeIn { 
+      0% { opacity: 0; transform: scale(0.8); } 
+      100% { opacity: 1; transform: scale(1); } 
+    }
+    @keyframes fadeInMin { 
+      0% { opacity: 0; transform: scale(0.95); } 
+      100% { opacity: 1; transform: scale(1); } 
+    }
+    @keyframes bounce { 
+      0%, 100% { transform: translateY(0); } 
+      50% { transform: translateY(-10px); } 
+    }
+    @keyframes bgFadeOut { 
+      0% { opacity: 1; } 
+      100% { opacity: 0; } 
+    }
+    @keyframes fadeOut { 
+      0% { opacity: 1; } 
+      100% { opacity: 0; } 
+    }
     /* حاوية عرض المنيو */
     #menu-container {
       display: none;
@@ -93,7 +108,7 @@
       background: url('https://example.com/your-background-image.jpg') no-repeat center center fixed;
       background-size: cover;
     }
-    #pdf-container { padding-bottom: 20px; }
+    #pdf-container { padding-bottom: 0; }
     /* عرض صفحات PDF تملأ الشاشة بالكامل */
     .pdf-page {
       display: block;
@@ -115,9 +130,8 @@
       .loading-text { font-size: 1rem; }
       #contact-buttons a { padding: 4px; }
       .contact-logo { height: 18px; }
-      .pdf-page { margin: 0; }
     }
-    /* أزرار التواصل: تظهر في أقصى اليمين بالأسفل على نفس مستوى زر المصمم */
+    /* أزرار التواصل */
     #contact-buttons {
       position: fixed;
       bottom: 10px;
@@ -127,7 +141,6 @@
       gap: 5px;
       z-index: 20;
     }
-    /* تصميم أزرار التواصل كأيقونات فقط مع انيميشن دوران بسيط */
     .contact-btn {
       display: flex;
       align-items: center;
@@ -149,7 +162,7 @@
       50% { transform: rotate(10deg); }
       100% { transform: rotate(0deg); }
     }
-    /* زر المصمم مع نص "designed by" فوقه */
+    /* زر المصمم مع نص "designed by" تحت اللوجو */
     #designer-button {
       position: fixed;
       bottom: 10px;
@@ -158,24 +171,19 @@
       display: none;
       text-align: center;
     }
-    #designer-button .designer-text {
-      font-size: 0.5rem;
-      color: #333;
-      margin-bottom: 0;
-      line-height: 1;
-    }
+    /* نقل النص تحت اللوجو عن طريق تبديل ترتيبه */
     #designer-button a img {
       height: 40px;
       width: auto;
       cursor: pointer;
       transition: transform 0.3s;
-      filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.8));
+      filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5));
     }
     #designer-button a img:hover { transform: scale(1.1); }
-    @keyframes buttonPulse {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0.2); }
-      50% { transform: scale(1.1); box-shadow: 0 0 15px 5px rgba(0,0,0,0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+    #designer-button .designer-text {
+      font-size: 0.5rem;
+      color: #333;
+      margin-top: 2px;
     }
     /* نافذة Modal */
     #modal-overlay {
@@ -250,15 +258,15 @@
     </a>
   </div>
   
-  <!-- زر المصمم مع نص "designed by" (في أسفل اليسار) -->
+  <!-- زر المصمم مع نص "designed by" تحت اللوجو (في أسفل اليسار) -->
   <div id="designer-button">
-    <div class="designer-text">designed by</div>
     <a href="https://www.facebook.com/profile.php?id=100054792170666">
       <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
     </a>
+    <div class="designer-text">designed by</div>
   </div>
   
-  <!-- نافذة Modal -->
+  <!-- نافذة Modal لعرض الصورة المكبرة مع اسم الصنف -->
   <div id="modal-overlay">
     <div id="modal-content">
       <button id="modal-close">X</button>
@@ -313,19 +321,18 @@
       for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
         pdfDoc.getPage(pageNum).then(function(page) {
           let unscaledViewport = page.getViewport({ scale: 1 });
-          // استخدام عرض الشاشة بالكامل (100%)
+          // استخدام عرض الشاشة بالكامل
           let desiredScale = (window.innerWidth) / unscaledViewport.width;
           let viewport = page.getViewport({ scale: desiredScale });
           
           let canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
-          // تحسين جودة العرض باستخدام devicePixelRatio
-          canvas.width = viewport.width * window.devicePixelRatio;
-          canvas.height = viewport.height * window.devicePixelRatio;
+          // إزالة devicePixelRatio لجعل الصورة كما في الأصل
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
           canvas.style.width = viewport.width + "px";
           canvas.style.height = viewport.height + "px";
           let ctx = canvas.getContext('2d');
-          ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
           container.appendChild(canvas);
           
           let renderContext = {
