@@ -302,28 +302,6 @@
       font-size: 1rem;
       cursor: pointer;
     }
-    /* تقييم النجوم */
-    .rating {
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    .rating span {
-      font-size: 1rem;
-      color: #333;
-      margin-right: 10px;
-    }
-    .stars {
-      display: inline-block;
-    }
-    .stars i {
-      font-size: 1.5rem;
-      color: #ccc;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-    .stars i.active {
-      color: #ffcc00; /* لون النجوم المختارة */
-    }
     /* نافذة عناوين الفروع */
     #branches-overlay {
       display: none;
@@ -496,16 +474,6 @@
     <div id="suggestions-content">
       <button id="suggestions-close">X</button>
       <h3>الشكاوى والاقتراحات</h3>
-      <div class="rating">
-        <span>تقييم تجربة المنيو:</span>
-        <div class="stars">
-          <i class="fas fa-star" data-rating="1"></i>
-          <i class="fas fa-star" data-rating="2"></i>
-          <i class="fas fa-star" data-rating="3"></i>
-          <i class="fas fa-star" data-rating="4"></i>
-          <i class="fas fa-star" data-rating="5"></i>
-        </div>
-      </div>
       <form id="suggestions-form" onsubmit="sendSuggestion(event)">
         <textarea id="suggestion-text" placeholder="اكتب اقتراحك أو شكواك هنا..." required></textarea>
         <button type="submit">إرسال</button>
@@ -561,7 +529,7 @@
   <script>
     // تهيئة EmailJS
     (function() {
-      emailjs.init("mohamed.elghonamey@gmail.com"); // استبدل YOUR_USER_ID بمعرف المستخدم الخاص بك
+      emailjs.init("OfzO8nCMLrJYbf_EU"); // استبدل YOUR_PUBLIC_KEY بالمفتاح العام الخاص بك
     })();
 
     // تعريف مصفوفة أسماء الأصناف لكل صفحة
@@ -881,11 +849,9 @@
     function sendSuggestion(event) {
       event.preventDefault(); // منع إعادة تحميل الصفحة
       const suggestionText = document.getElementById('suggestion-text').value;
-      const rating = document.querySelectorAll('.stars i.active').length; // عدد النجوم المختارة
       if (suggestionText.trim() !== "") {
         emailjs.send("service_oy9eizp", "template_coobd3z", {
-          message: suggestionText,
-          rating: rating
+          message: suggestionText
         }).then(function(response) {
           alert('تم إرسال اقتراحك بنجاح! شكرًا لك.');
           document.getElementById('suggestion-text').value = ""; // مسح الحقل
@@ -897,21 +863,6 @@
         alert("يرجى كتابة اقتراحك أو شكواك قبل الإرسال.");
       }
     }
-
-    // إدارة التقييم بالنجوم
-    const stars = document.querySelectorAll('.stars i');
-    stars.forEach(star => {
-      star.addEventListener('click', function() {
-        const rating = this.getAttribute('data-rating');
-        stars.forEach((s, index) => {
-          if (index < rating) {
-            s.classList.add('active');
-          } else {
-            s.classList.remove('active');
-          }
-        });
-      });
-    });
 
     // فتح نافذة عناوين الفروع
     document.getElementById('branches-button').addEventListener('click', function() {
