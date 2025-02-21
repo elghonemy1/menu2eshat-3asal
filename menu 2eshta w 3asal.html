@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منيو قشطة وعسل</title>
+  <!-- Preload لصورة الخلفية لتحسين سرعة التحميل -->
+  <link rel="preload" as="image" href="https://i.imgur.com/PDgHN0A.png">
+  <!-- إضافة خط "Cairo" -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <!-- إضافة Font Awesome للأيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+        integrity="sha512-pXYH5X5ED+PtE5wZymz/Uu4Wh9Jg+gZ0+1Z9xdM2Y6p+CnHq7s3X59+VxF2FE3UlPKzE0czNwA83jE5bM4Q3Uw==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* إعدادات عامة */
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      overflow: hidden;
+    }
+    /* شاشة الاستقبال (Splash Screen) */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 10;
+    }
+    /* الخلفية مع تأثير التلاشي لشاشة الاستقبال */
+    #splash-screen::before {
+      content: "";
+      position: absolute;
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.imgur.com/PDgHN0A.png') center/cover no-repeat;
+      animation: bgFadeOut 3s ease-out 2s forwards;
+      z-index: -1;
+    }
+    /* حاوية اللوجو */
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .main-logo {
+      max-width: 40%;
+      height: auto;
+      animation: fadeIn 2s ease-in, bounce 3s infinite ease-in-out;
+    }
+    /* اللوجو الثانوي داخل شاشة الاستقبال */
+    .second-logo {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      max-width: 10%;
+      height: auto;
+      opacity: 0;
+      animation: fadeInMin 1s ease-in 1.5s forwards;
+    }
+    /* نص "جارى عرض المنيو" */
+    .loading-text {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #333;
+    }
+    .loading-text .dot {
+      opacity: 0;
+      animation: blink 1.5s infinite;
+    }
+    .loading-text .dot:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+    .loading-text .dot:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+    @keyframes blink {
+      0%, 20% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeInMin {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes bgFadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    /* حاوية عرض المنيو (الـ PDF) */
+    #menu-container {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+      /* استبدل الرابط التالي برابط الخلفية التي تريدها */
+      background: url('https://example.com/your-background-image.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    /* تنسيق صفحات PDF */
+    .pdf-page {
+      display: block;
+      margin: 0;
+      background: transparent;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      box-shadow: none;
+      border: none;
+      background: transparent;
+    }
+    @media (max-width: 768px) {
+      .main-logo { max-width: 70%; }
+      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
+      .loading-text { font-size: 1rem; }
+    }
+    /* أزرار التواصل (على اليمين) */
+    #contact-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 20;
+    }
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 1rem;
+      /* اللوجو يظهر على اليسار */
+      flex-direction: row;
+      animation: buttonPulse 2s infinite ease-in-out;
+      transition: transform 0.2s ease-in-out;
+    }
+    .contact-btn:hover {
+      transform: translateY(-5px) scale(1.1);
+    }
+    .contact-btn.facebook {
+      background: #3b5998;
+    }
+    .contact-btn.whatsapp {
+      background: #25D366;
+    }
+    .contact-btn.tiktok {
+      background: linear-gradient(45deg, #69C9D0, #EE1D52);
+    }
+    .contact-logo {
+      height: 24px;  /* ارتفاع 24 بكسل */
+      width: auto;
+    }
+    /* زر المصمم (يستخدم نفس مكان اللوجو الثانوي) - سيظهر بعد اختفاء شاشة الاستقبال */
+    #designer-button {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      z-index: 30;
+      display: none;
+    }
+    #designer-button a img {
+      height: 40px; /* حوالي نفس حجم اللوجو الثانوي أو أصغر قليلاً */
+      width: auto;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    #designer-button a img:hover {
+      transform: scale(1.1);
+    }
+    /* أنيميشن لأزرار التواصل */
+    @keyframes buttonPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0,0,0,0.2);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px 5px rgba(0,0,0,0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0,0,0,0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- شاشة الاستقبال -->
+  <div id="splash-screen">
+    <div class="logo-container">
+      <img class="main-logo" src="https://i.imgur.com/eCo7Ams.png" alt="لوجو المطعم" loading="lazy">
+      <img class="second-logo" src="https://i.imgur.com/PNYGCQt.png" alt="لوجو إضافي" loading="lazy">
+    </div>
+    <div class="loading-text">
+      جارى عرض المنيو<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </div>
+  </div>
+  
+  <!-- حاوية عرض المنيو (PDF) -->
+  <div id="menu-container">
+    <div id="pdf-container"></div>
+  </div>
+  
+  <!-- أزرار التواصل (على اليمين) -->
+  <div id="contact-buttons">
+    <a href="https://www.facebook.com/kshtaw3asl2" target="_blank" class="contact-btn facebook">
+      <img src="https://i.imgur.com/q4jRmvw.png" alt="Facebook Logo" class="contact-logo"> فيسبوك
+    </a>
+    <a href="https://wa.me/01027887973" target="_blank" class="contact-btn whatsapp">
+      <img src="https://i.imgur.com/0X381ZL.png" alt="WhatsApp Logo" class="contact-logo"> واتس اب
+    </a>
+    <a href="https://www.tiktok.com/@eshta.w.asal" target="_blank" class="contact-btn tiktok">
+      <img src="https://i.imgur.com/cqthyCT.png" alt="TikTok Logo" class="contact-logo"> تيكتوك
+    </a>
+  </div>
+  
+  <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) - سيظهر بعد اختفاء شاشة الاستقبال -->
+  <div id="designer-button">
+    <a href="https://www.facebook.com/profile.php?id=100054792170666" target="_blank">
+      <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
+    </a>
+  </div>
+  
+  <!-- سكربت شاشة الاستقبال وإظهار زر المصمم بعد اختفائها -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const splashDuration = 5000; // مدة شاشة الاستقبال (5 ثوانٍ)
+      setTimeout(() => {
+        document.getElementById('splash-screen').style.display = 'none';
+        document.getElementById('menu-container').style.display = 'block';
+        // إظهار زر المصمم بعد اختفاء شاشة الاستقبال (أي بعد اختفاء اللوجو الثانوي)
+        document.getElementById('designer-button').style.display = 'block';
+      }, splashDuration);
+    });
+  </script>
+  
+  <!-- تحميل مكتبة PDF.js من CDNJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <script>
+    if (typeof pdfjsLib === 'undefined') {
+      console.error('فشل تحميل مكتبة PDF.js');
+    } else {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+    }
+    
+    // رابط ملف PDF (تأكد من صحته)
+    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/last1/2eshta%20w%203asal%20menu.pdf';
+    const container = document.getElementById('pdf-container');
+    
+    pdfjsLib.getDocument(url).promise.then(function(pdfDoc) {
+      console.log('تم تحميل PDF، عدد الصفحات:', pdfDoc.numPages);
+      for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+        pdfDoc.getPage(pageNum).then(function(page) {
+          let unscaledViewport = page.getViewport({ scale: 1 });
+          let desiredScale = window.innerWidth / unscaledViewport.width;
+          let viewport = page.getViewport({ scale: desiredScale });
+          
+          let canvas = document.createElement('canvas');
+          canvas.className = 'pdf-page';
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          container.appendChild(canvas);
+          
+          let ctx = canvas.getContext('2d');
+          let renderContext = {
+            canvasContext: ctx,
+            viewport: viewport
+          };
+          page.render(renderContext).promise.then(function() {
+            console.log('تم عرض الصفحة رقم:', pageNum);
+          });
+        });
+      }
+    }).catch(function(error) {
+      console.error('خطأ في تحميل الـ PDF:', error);
+    });
+  </script>
+</body>
+</html>
