@@ -103,15 +103,18 @@
       0% { opacity: 1; }
       100% { opacity: 0; }
     }
-    /* حاوية عرض المنيو (الـ PDF) */
+    /* حاوية عرض المنيو (PDF) */
     #menu-container {
       display: none;
       width: 100%;
       height: 100vh;
       overflow-y: auto;
-      /* استبدل الرابط التالي برابط الخلفية التي تريدها */
       background: url('https://example.com/your-background-image.jpg') no-repeat center center fixed;
       background-size: cover;
+    }
+    /* إضافة padding-bottom لعرض الصفحة الأخيرة بشكل كامل */
+    #pdf-container {
+      padding-bottom: 20px;
     }
     /* تنسيق صفحات PDF */
     .pdf-page {
@@ -126,11 +129,6 @@
       box-shadow: none;
       border: none;
       background: transparent;
-    }
-    @media (max-width: 768px) {
-      .main-logo { max-width: 70%; }
-      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
-      .loading-text { font-size: 1rem; }
     }
     /* أزرار التواصل (على اليمين) */
     #contact-buttons {
@@ -151,7 +149,6 @@
       text-decoration: none;
       color: #fff;
       font-size: 1rem;
-      /* اللوجو يظهر على اليسار */
       flex-direction: row;
       animation: buttonPulse 2s infinite ease-in-out;
       transition: transform 0.2s ease-in-out;
@@ -169,10 +166,10 @@
       background: linear-gradient(45deg, #69C9D0, #EE1D52);
     }
     .contact-logo {
-      height: 24px;  /* ارتفاع 24 بكسل */
+      height: 24px;
       width: auto;
     }
-    /* زر المصمم (يستخدم نفس مكان اللوجو الثانوي) - سيظهر بعد اختفاء شاشة الاستقبال */
+    /* زر المصمم (يستخدم نفس مكان اللوجو الثانوي) - يظهر بعد اختفاء شاشة الاستقبال */
     #designer-button {
       position: fixed;
       bottom: 10px;
@@ -181,7 +178,7 @@
       display: none;
     }
     #designer-button a img {
-      height: 40px; /* حوالي نفس حجم اللوجو الثانوي أو أصغر قليلاً */
+      height: 40px;
       width: auto;
       cursor: pointer;
       transition: transform 0.3s;
@@ -189,7 +186,6 @@
     #designer-button a img:hover {
       transform: scale(1.1);
     }
-    /* أنيميشن لأزرار التواصل */
     @keyframes buttonPulse {
       0% {
         transform: scale(1);
@@ -202,6 +198,19 @@
       100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(0,0,0,0);
+      }
+    }
+    /* تقليل حجم أزرار التواصل على الأجهزة المحمولة */
+    @media (max-width: 768px) {
+      .main-logo { max-width: 70%; }
+      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
+      .loading-text { font-size: 1rem; }
+      #contact-buttons a {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+      .contact-logo {
+        height: 18px;
       }
     }
   </style>
@@ -225,34 +234,39 @@
   
   <!-- أزرار التواصل (على اليمين) -->
   <div id="contact-buttons">
-    <a href="https://www.facebook.com/kshtaw3asl2" target="_blank" class="contact-btn facebook">
+    <a href="https://www.facebook.com/yourpage" target="_blank" class="contact-btn facebook">
       <img src="https://i.imgur.com/q4jRmvw.png" alt="Facebook Logo" class="contact-logo"> فيسبوك
     </a>
-    <a href="https://wa.me/01027887973" target="_blank" class="contact-btn whatsapp">
+    <a href="https://wa.me/1234567890" target="_blank" class="contact-btn whatsapp">
       <img src="https://i.imgur.com/0X381ZL.png" alt="WhatsApp Logo" class="contact-logo"> واتس اب
     </a>
-    <a href="https://www.tiktok.com/@eshta.w.asal" target="_blank" class="contact-btn tiktok">
+    <a href="https://www.tiktok.com/@yourusername" target="_blank" class="contact-btn tiktok">
       <img src="https://i.imgur.com/cqthyCT.png" alt="TikTok Logo" class="contact-logo"> تيكتوك
     </a>
   </div>
   
-  <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) - سيظهر بعد اختفاء شاشة الاستقبال -->
+  <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) - يظهر بعد اختفاء شاشة الاستقبال -->
   <div id="designer-button">
-    <a href="https://www.facebook.com/profile.php?id=100054792170666" target="_blank">
+    <a href="https://yourdesignerpage.com" target="_blank">
       <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
     </a>
   </div>
   
-  <!-- سكربت شاشة الاستقبال وإظهار زر المصمم بعد اختفائها -->
+  <!-- سكربت شاشة الاستقبال وإظهار زر المصمم بعد اختفائها باستخدام localStorage -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const splashDuration = 5000; // مدة شاشة الاستقبال (5 ثوانٍ)
-      setTimeout(() => {
+      if (localStorage.getItem("splashShown")) {
         document.getElementById('splash-screen').style.display = 'none';
         document.getElementById('menu-container').style.display = 'block';
-        // إظهار زر المصمم بعد اختفاء شاشة الاستقبال (أي بعد اختفاء اللوجو الثانوي)
         document.getElementById('designer-button').style.display = 'block';
-      }, splashDuration);
+      } else {
+        setTimeout(() => {
+          document.getElementById('splash-screen').style.display = 'none';
+          document.getElementById('menu-container').style.display = 'block';
+          document.getElementById('designer-button').style.display = 'block';
+          localStorage.setItem("splashShown", "true");
+        }, 5000);
+      }
     });
   </script>
   
