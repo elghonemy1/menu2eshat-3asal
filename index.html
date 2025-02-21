@@ -130,57 +130,35 @@
       border: none;
       background: transparent;
     }
-    @media (max-width: 768px) {
-      .main-logo { max-width: 70%; }
-      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
-      .loading-text { font-size: 1rem; }
-      /* تقليل حجم أزرار التواصل على الموبايل */
-      #contact-buttons a {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-      }
-      .contact-logo {
-        height: 18px;
-      }
-    }
-    /* أزرار التواصل (على اليمين) */
+    /* أزرار التواصل - تظهر في أقصى اليمين (عمود عمودي في منتصف الارتفاع) */
     #contact-buttons {
       position: fixed;
-      bottom: 20px;
+      top: 50%;
       right: 20px;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
       gap: 10px;
       z-index: 20;
     }
+    /* تصميم أزرار التواصل بحيث تكون أيقونات فقط */
     .contact-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 15px;
-      border-radius: 5px;
+      justify-content: center;
       text-decoration: none;
-      color: #fff;
-      font-size: 1rem;
-      flex-direction: row;
-      animation: buttonPulse 2s infinite ease-in-out;
+      /* إزالة الخلفية والأحجام الزائدة */
+      padding: 4px;
+      border-radius: 50%;
       transition: transform 0.2s ease-in-out;
     }
     .contact-btn:hover {
-      transform: translateY(-5px) scale(1.1);
-    }
-    .contact-btn.facebook {
-      background: #3b5998;
-    }
-    .contact-btn.whatsapp {
-      background: #25D366;
-    }
-    .contact-btn.tiktok {
-      background: linear-gradient(45deg, #69C9D0, #EE1D52);
+      transform: scale(1.1);
     }
     .contact-logo {
       height: 24px;
       width: auto;
+      display: block;
     }
     /* زر المصمم (يستخدم نفس مكان اللوجو الثانوي) - يظهر بعد شاشة الاستقبال */
     #designer-button {
@@ -213,6 +191,18 @@
         box-shadow: 0 0 0 0 rgba(0,0,0,0);
       }
     }
+    /* تقليل حجم أزرار التواصل على الأجهزة المحمولة */
+    @media (max-width: 768px) {
+      .main-logo { max-width: 70%; }
+      .second-logo { max-width: 15%; bottom: 5px; left: 5px; }
+      .loading-text { font-size: 1rem; }
+      #contact-buttons {
+        gap: 6px;
+      }
+      .contact-logo {
+        height: 18px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -232,22 +222,22 @@
     <div id="pdf-container"></div>
   </div>
   
-  <!-- أزرار التواصل (على اليمين) -->
+  <!-- أزرار التواصل (على اليمين) - أيقونات فقط -->
   <div id="contact-buttons">
-    <a href="https://www.facebook.com/yourpage" target="_blank" class="contact-btn facebook">
-      <img src="https://i.imgur.com/q4jRmvw.png" alt="Facebook Logo" class="contact-logo"> فيسبوك
+    <a href="https://www.facebook.com/kshtaw3asl2" class="contact-btn facebook">
+      <img src="https://i.imgur.com/q4jRmvw.png" alt="Facebook Logo" class="contact-logo">
     </a>
-    <a href="https://wa.me/1234567890" target="_blank" class="contact-btn whatsapp">
-      <img src="https://i.imgur.com/0X381ZL.png" alt="WhatsApp Logo" class="contact-logo"> واتس اب
+    <a href="https://wa.me/+201027887973" class="contact-btn whatsapp">
+      <img src="https://i.imgur.com/0X381ZL.png" alt="WhatsApp Logo" class="contact-logo">
     </a>
-    <a href="https://www.tiktok.com/@yourusername" target="_blank" class="contact-btn tiktok">
-      <img src="https://i.imgur.com/cqthyCT.png" alt="TikTok Logo" class="contact-logo"> تيكتوك
+    <a href="https://www.tiktok.com/@eshta.w.asal" class="contact-btn tiktok">
+      <img src="https://i.imgur.com/cqthyCT.png" alt="TikTok Logo" class="contact-logo">
     </a>
   </div>
   
   <!-- زر المصمم (يستخدم نفس صورة اللوجو الثانوي) - يظهر بعد شاشة الاستقبال -->
   <div id="designer-button">
-    <a href="https://yourdesignerpage.com" target="_blank">
+    <a href="https://www.facebook.com/profile.php?id=100054792170666">
       <img src="https://i.imgur.com/PNYGCQt.png" alt="Designer Button">
     </a>
   </div>
@@ -273,7 +263,7 @@
     }
     
     // رابط ملف PDF (تأكد من صحته)
-    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/last1/2eshta%20w%203asal%20menu.pdf';
+    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/2eshtaw-asal1/menu%202eshta%20w%20asal.pdf';
     const container = document.getElementById('pdf-container');
     
     pdfjsLib.getDocument(url).promise.then(function(pdfDoc) {
