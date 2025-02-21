@@ -117,6 +117,7 @@
       display: block;
       margin: 0 auto;
       background: transparent;
+      animation: fadeIn 0.5s ease-in-out;
     }
     canvas {
       display: block;
@@ -183,10 +184,12 @@
     }
     #designer-button a img:hover { transform: scale(1.1); }
     #designer-button .designer-text {
-      font-size: 0.5rem; /* حجم النص أصغر */
+      font-size: 0.5rem;
       color: #333;
-      margin-bottom: 2px; /* النص قريب من اللوجو */
+      margin-bottom: 2px; /* تقليل المسافة بين النص واللوجو */
       text-align: center;
+      position: relative;
+      top: -2px; /* تحريك النص لأعلى */
     }
     /* زر البحث */
     #search-bar {
@@ -386,20 +389,23 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(52, 152, 219, 0.8);
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       font-size: 1.5rem;
+      color: #fff;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
     .nav-button:hover {
-      background: rgba(255, 255, 255, 1);
+      background: rgba(52, 152, 219, 1);
+      transform: scale(1.1);
     }
     #prev-button {
       left: 10px;
@@ -522,7 +528,7 @@
   <script>
     // تهيئة EmailJS
     (function() {
-      emailjs.init("2eshta $ 3asal"); // استبدل YOUR_USER_ID بمعرف المستخدم الخاص بك
+      emailjs.init("OfzO8nCMLrJYbf_EU"); // استبدل YOUR_USER_ID بمعرف المستخدم الخاص بك
     })();
 
     // تعريف مصفوفة أسماء الأصناف لكل صفحة
