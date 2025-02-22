@@ -437,6 +437,65 @@
       background: #2980b9;
       transform: scale(1.1);
     }
+    /* زر التقييم */
+    #rating-button {
+      position: fixed;
+      bottom: 200px;
+      right: 20px;
+      z-index: 40;
+      display: none;
+      background: #3498db;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    #rating-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    #rating-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    #rating-stars {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    #rating-stars .star {
+      font-size: 2rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    #rating-stars .star:hover,
+    #rating-stars .star.active {
+      color: #ffcc00;
+    }
+    #rating-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fff;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -495,6 +554,26 @@
   <!-- زر العودة إلى الأعلى -->
   <div id="back-to-top">
     <i class="fas fa-arrow-up"></i>
+  </div>
+  
+  <!-- زر التقييم -->
+  <div id="rating-button">
+    <i class="fas fa-star"></i> قيمنا
+  </div>
+  
+  <!-- نافذة التقييم -->
+  <div id="rating-overlay">
+    <div id="rating-content">
+      <button id="rating-close">X</button>
+      <h3>قيم تجربتك</h3>
+      <div id="rating-stars">
+        <span class="star" data-value="1"><i class="fas fa-star"></i></span>
+        <span class="star" data-value="2"><i class="fas fa-star"></i></span>
+        <span class="star" data-value="3"><i class="fas fa-star"></i></span>
+        <span class="star" data-value="4"><i class="fas fa-star"></i></span>
+        <span class="star" data-value="5"><i class="fas fa-star"></i></span>
+      </div>
+    </div>
   </div>
   
   <!-- نافذة الاقتراحات -->
@@ -930,6 +1009,46 @@
         behavior: 'smooth'
       });
     });
+
+    // إظهار زر التقييم عند الوصول إلى آخر صفحة
+    function checkLastPage() {
+      if (currentPage === pdfDoc.numPages - 1) {
+        document.getElementById('rating-button').style.display = 'block';
+      } else {
+        document.getElementById('rating-button').style.display = 'none';
+      }
+    }
+
+    // فتح نافذة التقييم
+    document.getElementById('rating-button').addEventListener('click', function() {
+      document.getElementById('rating-overlay').style.display = 'flex';
+    });
+
+    // إغلاق نافذة التقييم
+    document.getElementById('rating-close').addEventListener('click', function() {
+      document.getElementById('rating-overlay').style.display = 'none';
+    });
+
+    // تقييم النجوم
+    const stars = document.querySelectorAll('#rating-stars .star');
+    stars.forEach(star => {
+      star.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        stars.forEach((s, index) => {
+          if (index < value) {
+            s.classList.add('active');
+          } else {
+            s.classList.remove('active');
+          }
+        });
+        alert(`شكرًا لتقييمك! قيمتك: ${value} نجوم`);
+        document.getElementById('rating-overlay').style.display = 'none';
+      });
+    });
+
+    // التحقق من الصفحة الحالية عند التنقل
+    document.getElementById('next-button').addEventListener('click', checkLastPage);
+    document.getElementById('prev-button').addEventListener('click', checkLastPage);
   </script>
 </body>
 </html>
