@@ -277,13 +277,16 @@
       flex-direction: column;
       gap: 10px;
     }
+    #suggestions-form input,
     #suggestions-form textarea {
-      width: 300px;
-      height: 100px;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      font-size: 1rem;
+    }
+    #suggestions-form textarea {
       resize: none;
+      height: 100px;
     }
     #suggestions-form button {
       background: #3498db;
@@ -414,6 +417,26 @@
     #next-button {
       right: 10px;
     }
+    /* زر العودة إلى الأعلى */
+    #back-to-top {
+      position: fixed;
+      bottom: 150px;
+      right: 20px;
+      z-index: 40;
+      display: none;
+      background: #3498db;
+      color: #fff;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    #back-to-top:hover {
+      background: #2980b9;
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
@@ -469,12 +492,19 @@
     عناوين الفروع
   </div>
   
+  <!-- زر العودة إلى الأعلى -->
+  <div id="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+  
   <!-- نافذة الاقتراحات -->
   <div id="suggestions-overlay">
     <div id="suggestions-content">
       <button id="suggestions-close">X</button>
       <h3>الشكاوى والاقتراحات</h3>
       <form id="suggestions-form" onsubmit="sendSuggestion(event)">
+        <input type="text" id="user-name" placeholder="اسمك">
+        <input type="email" id="user-email" placeholder="بريدك الإلكتروني">
         <textarea id="suggestion-text" placeholder="اكتب اقتراحك أو شكواك هنا..." required></textarea>
         <button type="submit">إرسال</button>
       </form>
@@ -848,14 +878,23 @@
     // إرسال الاقتراحات باستخدام EmailJS
     function sendSuggestion(event) {
       event.preventDefault(); // منع إعادة تحميل الصفحة
+      const userName = document.getElementById('user-name').value;
+      const userEmail = document.getElementById('user-email').value;
       const suggestionText = document.getElementById('suggestion-text').value;
+
       if (suggestionText.trim() !== "") {
-        emailjs.send("service_oy9eizp", "template_4r0a8h2", {
-          message: suggestionText
+        emailjs.send("service_oy9eizp", "template_zvnbvjk", {
+          name: userName,        // اسم المستخدم
+          email: userEmail,      // البريد الإلكتروني
+          message: suggestionText // نص الاقتراح
         }).then(function(response) {
           alert('تم إرسال اقتراحك بنجاح! شكرًا لك.');
-          document.getElementById('suggestion-text').value = ""; // مسح الحقل
-          document.getElementById('suggestions-overlay').style.display = 'none'; // إغلاق النافذة
+          // مسح الحقول بعد الإرسال
+          document.getElementById('user-name').value = "";
+          document.getElementById('user-email').value = "";
+          document.getElementById('suggestion-text').value = "";
+          // إغلاق نافذة الاقتراحات
+          document.getElementById('suggestions-overlay').style.display = 'none';
         }, function(error) {
           alert('حدث خطأ أثناء إرسال الاقتراح. يرجى المحاولة مرة أخرى.');
         });
@@ -872,6 +911,24 @@
     // إغلاق نافذة عناوين الفروع
     document.getElementById('branches-close').addEventListener('click', function() {
       document.getElementById('branches-overlay').style.display = 'none';
+    });
+
+    // إظهار وإخفاء زر العودة إلى الأعلى
+    window.addEventListener('scroll', function() {
+      const backToTopButton = document.getElementById('back-to-top');
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    // العودة إلى الأعلى عند النقر على الزر
+    document.getElementById('back-to-top').addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     });
   </script>
 </body>
