@@ -529,7 +529,7 @@
   <script>
     // تهيئة EmailJS
     (function() {
-      emailjs.init("OfzO8nCMLrJYbf_EU"); // استبدل YOUR_PUBLIC_KEY بالمفتاح العام الخاص بك
+      emailjs.init("IAep7euOv-Y4bUbz-"); // استبدل YOUR_PUBLIC_KEY بالمفتاح العام الخاص بك
     })();
 
     // تعريف مصفوفة أسماء الأصناف لكل صفحة
@@ -850,7 +850,7 @@
       event.preventDefault(); // منع إعادة تحميل الصفحة
       const suggestionText = document.getElementById('suggestion-text').value;
       if (suggestionText.trim() !== "") {
-        emailjs.send("service_oy9eizp", "template_coobd3z", {
+        emailjs.send("service_oy9eizp", "template_4r0a8h2", {
           message: suggestionText
         }).then(function(response) {
           alert('تم إرسال اقتراحك بنجاح! شكرًا لك.');
