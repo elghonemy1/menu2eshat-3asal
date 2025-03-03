@@ -1,3 +1,76 @@
+<style>
+    /* التنسيق الأساسي المعدل */
+    .ramadan-decor {
+        position: fixed;
+        top: -5px;
+        left: 0;
+        width: 100%;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        z-index: 20;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .lantern {
+        width: 100%; /* امتداد لعرض الصفحة */
+        height: 100%;
+        background: url('https://i.imgur.com/KJ3u5K8.png') no-repeat center;
+        background-size: cover; /* تغطية المساحة مع الحفاظ على النسب */
+        animation: gentleFloat 3s ease-in-out infinite;
+    }
+
+    /* حركة بسيطة */
+    @keyframes gentleFloat {
+        0%, 100% { transform: translateY(-5px); }
+        50% { transform: translateY(5px); }
+    }
+
+    /* تعديلات الجوال */
+    @media (max-width: 768px) {
+        .ramadan-decor {
+            top: -3px;
+            height: 100px;
+        }
+    }
+</style>
+
+<div class="ramadan-decor">
+    <div class="lantern"></div>
+</div>
+<body>
+  <!-- مثال على شريط البحث -->
+  <div id="search-bar" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 25; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 25px;">
+    <input type="text" id="search-input" placeholder="ابحث عن صنف...">
+  </div>
+
+  <!-- حاوية الزينة -->
+  <div class="ramadan-decor">
+    <div class="lantern right"></div>
+    <div class="lantern left"></div>
+  </div>
+
+  <script>
+    // نظام التفعيل الزمني للزينة
+    const startDate = new Date('2025-02-28');
+    const endDate = new Date('2025-03-31');
+    const decor = document.querySelector('.ramadan-decor');
+
+    function checkDate() {
+      const now = new Date();
+      decor.style.display = (now >= startDate && now <= endDate) ? 'flex' : 'none';
+    }
+
+    // تحميل الصورة مسبقًا (تأكد من استخدام الرابط المباشر للصورة الجديدة)
+    new Image().src = 'https://i.imgur.com/NEW_IMAGE_LINK.png';
+
+    window.addEventListener('load', checkDate);
+    setInterval(checkDate, 3600000); // التحقق كل ساعة
+  </script>
+</body>
+</html>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -14,6 +87,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- إضافة مكتبة EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <!-- إضافة AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     /* إعدادات عامة */
     body {
@@ -189,7 +264,7 @@
       margin-bottom: 2px;
       text-align: center;
       position: relative;
-      top: 8px; /* تم تحريك النص لأسفل */
+      top: 8px;
     }
     /* زر البحث */
     #search-bar {
@@ -497,8 +572,11 @@
       cursor: pointer;
     }
   </style>
+  <!-- نهاية أكواد CSS - تم الإبقاء على جميع الأسطر الأصلية -->
+  <!-- تفعيل AngularJS عن طريق تغليف الصفحة (لن يتم حذف أي جزء من الكود الأصلي) -->
 </head>
-<body>
+<!-- إضافة ng-app و ng-controller لتغليف الكود داخل تطبيق AngularJS -->
+<body ng-app="menuApp" ng-controller="MenuController">
   <!-- شاشة الاستقبال -->
   <div id="splash-screen">
     <div class="logo-container">
@@ -515,9 +593,9 @@
     <div id="pdf-container"></div>
   </div>
   
-  <!-- شريط البحث -->
+  <!-- شريط البحث مع إضافة ng-model -->
   <div id="search-bar">
-    <input type="text" id="search-input" placeholder="ابحث عن صنف...">
+    <input type="text" id="search-input" ng-model="searchTerm" placeholder="ابحث عن صنف...">
   </div>
   
   <!-- أزرار التواصل (في أقصى اليمين بالأسفل) -->
@@ -525,8 +603,8 @@
     <a href="https://www.facebook.com/kshtaw3asl2" class="contact-btn facebook">
       <img src="https://i.imgur.com/21Jbxz1.png" alt="Facebook Logo" class="contact-logo">
     </a>
-    <a href="https://wa.me/+201019265003" class="contact-btn whatsapp">
-      <img src="https://i.imgur.com/2ubOGzW.png" alt="WhatsApp Logo" class="contact-logo">
+    <a href="https://www.instagram.com/eshta_w_asal/" class="contact-btn instagram">
+      <img src="https://i.imgur.com/M6ddot9.png" alt="Instagram Logo" class="contact-logo">
     </a>
     <a href="https://www.tiktok.com/@eshta.w.asal" class="contact-btn tiktok">
       <img src="https://i.imgur.com/64V1c8k.png" alt="TikTok Logo" class="contact-logo">
@@ -641,14 +719,37 @@
       emailjs.init("IAep7euOv-Y4bUbz-"); // استبدل YOUR_PUBLIC_KEY بالمفتاح العام الخاص بك
     })();
 
+    /* إضافة تعديل لتحسين معالجة الأخطاء:
+       تمت إضافة تنبيه للمستخدم في حال حدوث خطأ أثناء تحميل الـ PDF */
     // تعريف مصفوفة أسماء الأصناف لكل صفحة
     const productNames = [
-      // الصفحة الأولى
-      ["كيكة دبى"],
-      // الصفحة الثانية
-      ["الفنكوش", "الشقلوبة"],
-      // الصفحة الثالثة
-      [
+    // الصفحة 1 (الجديدة)
+    [
+        "فــــــــراولـــة مــانــجـــا",
+        "مـــــــــــــــــــوز فراولـــــة",
+        "مــــــــــــــــــوز كـراميــل",
+        "بــــــلــــــــــــح مـــــــــــــــوز",
+        "كيـــــــوى مـــــانجــــــا",
+        "ميكـــــس رمضــــــان",
+        "ســـــــــــــوبــــــــــــــيـــــــــــا",
+        "تمــــــــــــــر هنـــــــــــدى",
+        "خــــــروب قبــــــرصـى",
+        "ســــــوبيا مــــــــانـــجــا",
+        "ســــــوبيـا تـــــــــــــــــوت",
+        "ســــــوبيا لـــوتــــــــس",
+        "ســــوبيا فــــــــــراولـــة",
+        "ســـوبيـا فســــــــــدق",
+        "زبـــــــادوو فـراولة",
+        "زبــــــــادوو مانجـا",
+        "عصاير رمضان",
+        "عصائر رمضان"
+    ],
+    // الصفحة 2
+    ["كيكة دبى"],
+    // الصفحة 3
+    ["الفنكوش", "الشقلوبة"],
+    // الصفحة 4
+    [
         "رز بلبن كلاسيك",
         "رز بلبن بالمكسرات",
         "رز بلبن بالفستق الحلبى",
@@ -666,9 +767,9 @@
         "جريمة رز بلبن",
         "رعشة قشطة وعسل",
         "القنبلة"
-      ],
-      // الصفحة الرابعة
-      [
+    ],
+    // الصفحة 5
+    [
         "طاجن أم على كلاسيك",
         "طاجن أم على الغندورة",
         "طاجن أم على السنيورة",
@@ -681,24 +782,24 @@
         "كسكسى باللبن والمكسرات والقشطة والبسبوسة",
         "بليلة باللبن والقشطة",
         "بليلة باللبن والمكسرات والقشطة والبسبوسة"
-      ],
-      // الصفحة الخامسة
-      [
-        "طاجن أم على كلاسيك",
-        "طاجن أم على الغندورة",
-        "طاجن أم على السنيورة",
-        "طاجن أم على الرايقة",
-        "طاجن أم على الدلوعه",
-        "طاجن أم على أيس كريم",
-        "طاجن أم على لوتس",
-        "طاجن أم على البركة",
-        "كسكسى باللبن والقشطة",
-        "كسكسى باللبن والمكسرات والقشطة والبسبوسة",
-        "بليلة باللبن والقشطة",
-        "بليلة باللبن والمكسرات والقشطة والبسبوسة"
-      ],
-      // الصفحة السادسة
-      [
+    ],
+    // الصفحة 6
+    [
+        "طاجن بطاطا قشطة وعسل",
+        "طاجن بطاطا قشطة ولبن",
+        "طاجن بطاطا مكسرات",
+        "طاجن بطاطا بالأيس كريم",
+        "طاجن بطاطا لوتس",
+        "طاجن بطاطا نوتيلا وكراميل",
+        "طاجن بطاطا كيت كات أوريو",
+        "طاجن بطاطا بالفواكه",
+        "سالانكتيه لوتس",
+        "سالانكتيه فواكه",
+        "سالانكتيه أوريو نوتيلا",
+        "سالانكتيه مانجا"
+    ],
+    // الصفحة 7
+    [
         "النعنوشة",
         "قشطوطة مكسرات",
         "قشطوطة فواكه",
@@ -709,9 +810,9 @@
         "قشطوطة ميكس",
         "قشطوطة روشيه",
         "قشطوطة رفاييلو"
-      ],
-      // الصفحة السابعة
-      [
+    ],
+    // الصفحة 8
+    [
         "جيلى",
         "جيلى كاستر",
         "كاستر",
@@ -726,9 +827,9 @@
         "كشرى لوتس",
         "كشرى أوريو نوتيلا",
         "كشرى مانجا"
-      ],
-      // الصفحة الثامنة
-      [
+    ],
+    // الصفحة 9
+    [
         "طاجن الحنين",
         "طاجن بوريو نوتيلا",
         "طاجن أوريو نوتيلا",
@@ -741,9 +842,9 @@
         "آيس كوفى كيت كات",
         "آيس كوفى مالتيزر",
         "آيس كوفى لوتس"
-      ],
-      // الصفحة التاسعة
-      [
+    ],
+    // الصفحة 10
+    [
         "عصاير فريش",
         "مانجو",
         "شجرة مانجو",
@@ -762,9 +863,9 @@
         "ليمون",
         "ليمون نعناع",
         "فروت سلاط"
-      ],
-      // الصفحة العاشرة
-      [
+    ],
+    // الصفحة 11
+    [
         "ميلك شيك فانيليا",
         "ميلك شيك شيكولاته",
         "ميلك شيك فراولة",
@@ -778,9 +879,9 @@
         "ميلك شيك توت",
         "ميلك شيك كراميل",
         "ميلك شيك لوتس"
-      ],
-      // الصفحة الحادية عشر
-      [
+    ],
+    // الصفحة 12
+    [
         "سموزى بطيخ",
         "سموزى أناناس",
         "سموزى توت",
@@ -796,9 +897,9 @@
         "فراولة مانجو",
         "موز كراميل",
         "ميكس فواكه"
-      ],
-      // الصفحة الثانية عشر
-      [
+    ],
+    // الصفحة 13
+    [
         "زبادى توت",
         "زبادى عسل",
         "زبادى كراميل",
@@ -814,9 +915,9 @@
         "آيس كريم شرقى",
         "آيس كريم سبيشال",
         "آيس كريم فستق"
-      ],
-      // الصفحة الثالثة عشر
-      [
+    ],
+    // الصفحة 14
+    [
         "عصاير شوكلاته",
         "أوريو",
         "أوريو مانجو",
@@ -830,11 +931,12 @@
         "بوريو موز",
         "توينكيز مانجو",
         "لوتس"
-      ]
-    ];
+    ]
+];
 
     // عناوين الصفحات الرئيسية
     const pageTitles = [
+      "عصاير رمضان"
       "كيكة دبى",
       "الفنكوش والشقلوبة",
       "عالم الرز بلبن",
@@ -854,7 +956,7 @@
     let currentPage = 0;
 
     // رابط ملف PDF
-    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/2eshta-asal-menu/2eshta%26asal%20menu.pdf';
+    const url = 'https://cdn.jsdelivr.net/gh/elghonemy1/ramadan-pd@main/ramadan%20menu.pdf';
     const container = document.getElementById('pdf-container');
     let pdfDoc = null;
 
@@ -896,6 +998,8 @@
       }
     }).catch(function(error) {
       console.error('خطأ في تحميل الـ PDF:', error);
+      // تعديل: تم إضافة تنبيه للمستخدم في حال حدوث خطأ أثناء تحميل الـ PDF
+      alert('حدث خطأ أثناء تحميل القائمة. يرجى المحاولة في وقت لاحق.');
     });
 
     // تحديث المودال بالصفحة الحالية
@@ -927,16 +1031,26 @@
       document.getElementById('modal-overlay').style.display = 'none';
     });
 
-    // وظيفة البحث
+    // دالة توحيد الحروف العربية للبحث (إضافة جديدة)
+    function normalizeArabic(text) {
+      return text
+        .replace(/[أآإ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ـ/g, '')
+        .replace(/[ًٌٍَُِّ~ْ]/g, '');
+    }
+
+    // وظيفة البحث (تم التعديل)
     document.getElementById('search-input').addEventListener('input', function(e) {
-      const searchTerm = e.target.value.toLowerCase();
+      const searchTerm = normalizeArabic(e.target.value.toLowerCase());
       const pages = document.querySelectorAll('.pdf-page');
       pages.forEach((page, index) => {
         const pageProducts = productNames[index];
-        if (pageProducts.some(product => product.toLowerCase().includes(searchTerm))) {
+        const normalizedProducts = pageProducts.map(p => normalizeArabic(p.toLowerCase()));
+        if (normalizedProducts.some(product => product.includes(searchTerm))) {
           page.style.display = 'block';
           if (searchTerm !== "") {
-            page.scrollIntoView({ behavior: 'smooth' }); // التمرير إلى الصفحة
+            page.scrollIntoView({ behavior: 'smooth' });
           }
         } else {
           page.style.display = 'none';
@@ -1049,6 +1163,15 @@
     // التحقق من الصفحة الحالية عند التنقل
     document.getElementById('next-button').addEventListener('click', checkLastPage);
     document.getElementById('prev-button').addEventListener('click', checkLastPage);
+  </script>
+  
+  <!-- تهيئة تطبيق AngularJS (غلاف بسيط دون تغيير منطق الكود الأصلي) -->
+  <script>
+    angular.module('menuApp', [])
+      .controller('MenuController', ['$scope', function($scope) {
+        // يمكن إضافة وظائف AngularJS هنا لاحقًا دون التأثير على الكود الأصلي
+        $scope.searchTerm = "";
+      }]);
   </script>
 </body>
 </html>
